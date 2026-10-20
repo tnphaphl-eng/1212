@@ -45,15 +45,17 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
 @media(max-width:380px){.card{padding:35px 18px}.actions{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
-/* Rainbow pointer glow on devices with a mouse */
-@media (hover:hover) and (pointer:fine){
- body{cursor:crosshair}
- .rainbow-cursor{position:fixed;left:0;top:0;width:27px;height:27px;border:3px solid transparent;border-radius:50%;pointer-events:none;z-index:2147483647;transform:translate(-50%,-50%);background:linear-gradient(#101025,#101025) padding-box,conic-gradient(red,orange,yellow,lime,cyan,blue,magenta,red) border-box;box-shadow:0 0 20px #aa88ffb9;transition:width .15s,height .15s;opacity:0}
- .rainbow-cursor.visible{opacity:1}
- .rainbow-dot{position:fixed;left:0;top:0;width:13px;height:13px;border-radius:50%;pointer-events:none;z-index:2147483646;transform:translate(-50%,-50%);background:hsl(var(--hue) 100% 65%);box-shadow:0 0 12px 3px hsl(var(--hue) 100% 65% / .65);animation:rainbow-fade .75s ease-out forwards}
- @keyframes rainbow-fade{to{opacity:0;transform:translate(-50%,-50%) scale(.1)}}
+/* Cute 3D neon pointer */
+@media(hover:hover) and (pointer:fine){
+  body,body *{cursor:none!important}
+  .neon-mouse{position:fixed;top:0;left:0;width:43px;height:49px;pointer-events:none;z-index:2147483647;opacity:0;transform:translate3d(0,0,0);will-change:transform;transition:opacity .15s}
+  .neon-mouse.show{opacity:1}
+  .neon-mouse svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 4px #0009) drop-shadow(0 0 9px #b986ff9c);transform-origin:10px 8px;transition:transform .12s}
+  .neon-mouse.pressed svg{transform:scale(.82) rotate(-7deg)}
+  .neon-mouse.over-link svg{transform:scale(1.16) rotate(3deg)}
+  .neon-mouse.pressed.over-link svg{transform:scale(.9)}
 }
-@media(prefers-reduced-motion:reduce){.rainbow-dot{animation:none;display:none}}
+@media(prefers-reduced-motion:reduce){.neon-mouse,.neon-mouse svg{transition:none!important}}
 </style></head>
 <body>
 <div class="orb" aria-hidden="true"></div><div class="orb two" aria-hidden="true"></div>
@@ -115,32 +117,36 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
  });
 })();
 
-/* Rainbow ring follows mouse; colored particles fade behind it. */
+/* A raised, glossy kawaii neon arrow with an exact clickable tip. */
 (function(){
  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
- const ring=document.createElement('div');
- ring.className='rainbow-cursor';
- ring.setAttribute('aria-hidden','true');
- document.body.appendChild(ring);
- let hue=0,last=0;
- const reduceMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const mouse=document.createElement('div');
+ mouse.className='neon-mouse';
+ mouse.setAttribute('aria-hidden','true');
+ mouse.innerHTML=`<svg viewBox="0 0 54 64" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="neonShell" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe3ff"/><stop offset=".23" stop-color="#ef9eff"/><stop offset=".55" stop-color="#ac7aff"/><stop offset="1" stop-color="#53e5ff"/></linearGradient>
+  <linearGradient id="neonSide" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5e36c4"/><stop offset="1" stop-color="#237baf"/></linearGradient>
+  <linearGradient id="shine" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="white" stop-opacity=".95"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+ </defs>
+ <path d="M6 6 7 48 18 38 28 59 39 53 28 34 45 34Z" fill="#2a175b" opacity=".8" transform="translate(3 2)"/>
+ <path d="M6 6 7 48 18 38 28 59 39 53 28 34 45 34Z" fill="url(#neonSide)" stroke="#58dcff" stroke-width="2.5" stroke-linejoin="round"/>
+ <path d="M6 6 7 42 19 31 29 51 34 48 24 28 39 29Z" fill="url(#neonShell)" stroke="#fff2ff" stroke-width="2" stroke-linejoin="round"/>
+ <path d="M10 12 11 29 17 25 26 41" fill="none" stroke="url(#shine)" stroke-width="3.5" stroke-linecap="round"/>
+ <circle cx="21" cy="23" r="2.3" fill="#fff" opacity=".95"/>
+ <path d="M39 7v7M35.5 10.5h7M47 20v5M44.5 22.5h5" stroke="#7ef5ff" stroke-width="2" stroke-linecap="round"/>
+ </svg>`;
+ document.body.appendChild(mouse);
  document.addEventListener('pointermove',e=>{
    if(e.pointerType==='touch')return;
-   ring.classList.add('visible');
-   ring.style.left=e.clientX+'px';
-   ring.style.top=e.clientY+'px';
-   if(reduceMotion)return;
-   const now=performance.now();
-   if(now-last<30)return;
-   last=now;hue=(hue+18)%360;
-   const dot=document.createElement('span');
-   dot.className='rainbow-dot';
-   dot.style.left=e.clientX+'px';
-   dot.style.top=e.clientY+'px';
-   dot.style.setProperty('--hue',hue);
-   document.body.appendChild(dot);
-   dot.addEventListener('animationend',()=>dot.remove(),{once:true});
+   mouse.style.transform='translate3d('+e.clientX+'px,'+e.clientY+'px,0)';
+   mouse.classList.add('show');
+   mouse.classList.toggle('over-link',!!e.target.closest('a,button,input,label,select,textarea,[role="button"]'));
  },{passive:true});
- document.addEventListener('pointerout',e=>{if(!e.relatedTarget)ring.classList.remove('visible')});
+ document.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')mouse.classList.add('pressed')});
+ document.addEventListener('pointerup',()=>mouse.classList.remove('pressed'));
+ document.addEventListener('pointercancel',()=>mouse.classList.remove('pressed'));
+ window.addEventListener('blur',()=>mouse.classList.remove('show'));
+ document.addEventListener('pointerout',e=>{if(!e.relatedTarget)mouse.classList.remove('show')});
 })();
 </script></body></html>
