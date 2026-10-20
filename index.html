@@ -30,6 +30,15 @@ h1{font-size:clamp(27px,6vw,35px);line-height:1.35;margin:0 0 5px;font-weight:60
 .secondary{color:#f6f5ff;border:1px solid #ffffff48;background:#ffffff10}
 .secondary:hover{background:#ffffff24}
 .btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.edit-toggle{margin:20px auto 0;display:block;border:1px solid #ffffff55;border-radius:12px;padding:10px 20px;background:#ffffff14;color:#fff;font:500 14px Kanit,sans-serif;cursor:pointer;transition:background .2s}
+.edit-toggle:hover{background:#ffffff2a}
+.editor{display:none;text-align:left;margin-top:18px;padding:19px;border-radius:14px;background:#080b22b8;border:1px solid #ffffff24}
+.editor.open{display:block}
+.editor label{display:block;font-size:13px;color:#ded8ff;margin:12px 0 6px}
+.editor input[type="text"],.editor input[type="file"]{width:100%;border:1px solid #ffffff44;border-radius:9px;background:#ffffff12;color:white;padding:10px;font:14px Kanit,sans-serif}
+.editor input[type="file"]{font-size:12px}
+.editor button{width:100%;border:0;border-radius:10px;background:linear-gradient(100deg,#b68cff,#68d9ff);padding:11px;margin-top:16px;color:#101025;font:600 14px Kanit,sans-serif;cursor:pointer}
+.editor .hint{font-size:11px;line-height:1.6;color:#a9a8c8;margin:10px 0 0}
 footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;letter-spacing:1.5px}
 @keyframes float{to{transform:translate(35px,-27px)}}@keyframes up{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:380px){.card{padding:35px 18px}.actions{grid-template-columns:1fr}}
@@ -39,8 +48,8 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
 <div class="orb" aria-hidden="true"></div><div class="orb two" aria-hidden="true"></div>
 <main class="card">
 <div class="status">CREATIVE DEVELOPER</div>
-<div class="avatar"><img src="file:///C:/Users/Administrator/Pictures/New%20folder/1222.webp" alt="รูปโปรไฟล์" onerror="this.onerror=null;this.src='https://api.dicebear.com/9.x/initials/svg?seed=Napapol&backgroundColor=252046&textColor=b68cff'"></div>
-<h1>นภาพล ทิพยจันทร์</h1>
+<div class="avatar"><img id="profilePhoto" src="images/profile.webp" alt="รูปโปรไฟล์" onerror="this.onerror=null;this.src='https://api.dicebear.com/9.x/initials/svg?seed=Napapol&backgroundColor=252046&textColor=b68cff'"></div>
+<h1 id="profileName">นภาพล ทิพยจันทร์</h1>
 <div class="name-en">NAPAPOL THIPPHAYACHAN</div>
 <div class="role">Web Developer / Designer</div>
 <p class="bio">สวัสดีครับ! ยินดีที่ได้รู้จัก 👋<br>ผมชื่นชอบการสร้างเว็บไซต์ที่สวย ใช้งานง่าย และการเรียนรู้เทคโนโลยีใหม่ ๆ เพื่อเปลี่ยนไอเดียให้กลายเป็นประสบการณ์ที่น่าประทับใจ</p>
@@ -49,5 +58,41 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
 <a class="btn primary" href="https://www.instagram.com/napapol_69/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>INSTAGRAM</a>
 <a class="btn secondary" href="https://github.com/tnphaphl-eng" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 19 4.77 5.07 5.07 0 0 0 18.91 1S17.73.65 15 2.48a13.38 13.38 0 0 0-7 0C5.27.65 4.09 1 4.09 1A5.07 5.07 0 0 0 4 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 8 18.13V22"/></svg>GITHUB</a>
 </div>
+<button class="edit-toggle" type="button" id="editToggle" aria-expanded="false" aria-controls="profileEditor">✎ แก้ไขชื่อและรูปโปรไฟล์</button>
+<form class="editor" id="profileEditor">
+<label for="nameInput">ชื่อที่ต้องการแสดง</label>
+<input id="nameInput" type="text" maxlength="70" required placeholder="ใส่ชื่อของคุณ">
+<label for="photoInput">เลือกรูปโปรไฟล์ (JPG, PNG หรือ WebP)</label>
+<input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp">
+<button type="submit">บันทึกการเปลี่ยนแปลง</button>
+<p class="hint" id="saveHint">ข้อมูลจะบันทึกในเบราว์เซอร์บนอุปกรณ์นี้เท่านั้น ไม่เปลี่ยนข้อมูลบน GitHub หรืออุปกรณ์ของผู้เข้าชมคนอื่น</p>
+</form>
 <footer>DESIGN • DEVELOP • CREATE ✦</footer>
-</main></body></html>
+</main>
+<script>
+(function(){
+ const key='neon-profile-v1';
+ const nameEl=document.getElementById('profileName');
+ const photoEl=document.getElementById('profilePhoto');
+ const nameInput=document.getElementById('nameInput');
+ const photoInput=document.getElementById('photoInput');
+ const editor=document.getElementById('profileEditor');
+ const toggle=document.getElementById('editToggle');
+ const hint=document.getElementById('saveHint');
+ let state={name:'นภาพล ทิพยจันทร์',photo:''};
+ try {const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved && typeof saved.name==='string'){state={name:saved.name,photo:typeof saved.photo==='string'?saved.photo:''}}}catch(e){}
+ function render(){nameEl.textContent=state.name;nameInput.value=state.name;if(state.photo)photoEl.src=state.photo}
+ render();
+ toggle.addEventListener('click',()=>{const open=editor.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));if(open)nameInput.focus()});
+ function shrink(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('อ่านรูปไม่สำเร็จ'));reader.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('ไฟล์รูปไม่ถูกต้อง'));img.onload=()=>{const side=320;const canvas=document.createElement('canvas');canvas.width=side;canvas.height=side;const ctx=canvas.getContext('2d');const size=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-size)/2,(img.height-size)/2,size,size,0,0,side,side);resolve(canvas.toDataURL('image/jpeg',.8))};img.src=reader.result};reader.readAsDataURL(file)})}
+ editor.addEventListener('submit',async event=>{
+ event.preventDefault();
+ const name=nameInput.value.trim();if(!name)return;
+ let photo=state.photo;
+ const file=photoInput.files[0];
+ if(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type)){hint.textContent='กรุณาเลือกรูป JPG, PNG หรือ WebP';return}try{photo=await shrink(file)}catch(e){hint.textContent='ไม่สามารถอ่านรูปได้ กรุณาลองอีกครั้ง';return}}
+ try{localStorage.setItem(key,JSON.stringify({name,photo}));state={name,photo};render();hint.textContent='✓ บันทึกเรียบร้อยบนเบราว์เซอร์นี้ (ยังไม่เปลี่ยนข้อมูลสาธารณะบน GitHub)';editor.classList.remove('open');toggle.setAttribute('aria-expanded','false')}
+ catch(e){hint.textContent='บันทึกไม่สำเร็จ พื้นที่จัดเก็บของเบราว์เซอร์อาจเต็ม'}
+ });
+})();
+</script></body></html>
