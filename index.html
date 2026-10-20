@@ -45,11 +45,15 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
 @media(max-width:380px){.card{padding:35px 18px}.actions{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
-/* Rainbow cursor trail: mouse/trackpad only */
-@media (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .rainbow-dot{position:fixed;left:0;top:0;width:15px;height:15px;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);background:hsl(var(--hue) 100% 65%);box-shadow:0 0 12px 3px hsl(var(--hue) 100% 65% / .65);animation:rainbow-fade .65s ease-out forwards}
-  @keyframes rainbow-fade{to{opacity:0;transform:translate(-50%,-50%) scale(.15)}}
+/* Rainbow pointer glow on devices with a mouse */
+@media (hover:hover) and (pointer:fine){
+ body{cursor:crosshair}
+ .rainbow-cursor{position:fixed;left:0;top:0;width:27px;height:27px;border:3px solid transparent;border-radius:50%;pointer-events:none;z-index:2147483647;transform:translate(-50%,-50%);background:linear-gradient(#101025,#101025) padding-box,conic-gradient(red,orange,yellow,lime,cyan,blue,magenta,red) border-box;box-shadow:0 0 20px #aa88ffb9;transition:width .15s,height .15s;opacity:0}
+ .rainbow-cursor.visible{opacity:1}
+ .rainbow-dot{position:fixed;left:0;top:0;width:13px;height:13px;border-radius:50%;pointer-events:none;z-index:2147483646;transform:translate(-50%,-50%);background:hsl(var(--hue) 100% 65%);box-shadow:0 0 12px 3px hsl(var(--hue) 100% 65% / .65);animation:rainbow-fade .75s ease-out forwards}
+ @keyframes rainbow-fade{to{opacity:0;transform:translate(-50%,-50%) scale(.1)}}
 }
+@media(prefers-reduced-motion:reduce){.rainbow-dot{animation:none;display:none}}
 </style></head>
 <body>
 <div class="orb" aria-hidden="true"></div><div class="orb two" aria-hidden="true"></div>
@@ -111,21 +115,32 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
  });
 })();
 
-/* Tiny rainbow particles follow pointer movement, without blocking clicks. */
-if(window.matchMedia('(pointer:fine) and (prefers-reduced-motion:no-preference)').matches){
-  let last=0,hue=0;
-  document.addEventListener('pointermove',event=>{
-    if(event.pointerType!=='mouse' && event.pointerType!=='pen')return;
-    const now=performance.now();
-    if(now-last<25)return;
-    last=now;hue=(hue+13)%360;
-    const dot=document.createElement('span');
-    dot.className='rainbow-dot';
-    dot.style.left=event.clientX+'px';
-    dot.style.top=event.clientY+'px';
-    dot.style.setProperty('--hue',hue);
-    document.body.appendChild(dot);
-    dot.addEventListener('animationend',()=>dot.remove(),{once:true});
-  },{passive:true});
-}
+/* Rainbow ring follows mouse; colored particles fade behind it. */
+(function(){
+ if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+ const ring=document.createElement('div');
+ ring.className='rainbow-cursor';
+ ring.setAttribute('aria-hidden','true');
+ document.body.appendChild(ring);
+ let hue=0,last=0;
+ const reduceMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+ document.addEventListener('pointermove',e=>{
+   if(e.pointerType==='touch')return;
+   ring.classList.add('visible');
+   ring.style.left=e.clientX+'px';
+   ring.style.top=e.clientY+'px';
+   if(reduceMotion)return;
+   const now=performance.now();
+   if(now-last<30)return;
+   last=now;hue=(hue+18)%360;
+   const dot=document.createElement('span');
+   dot.className='rainbow-dot';
+   dot.style.left=e.clientX+'px';
+   dot.style.top=e.clientY+'px';
+   dot.style.setProperty('--hue',hue);
+   document.body.appendChild(dot);
+   dot.addEventListener('animationend',()=>dot.remove(),{once:true});
+ },{passive:true});
+ document.addEventListener('pointerout',e=>{if(!e.relatedTarget)ring.classList.remove('visible')});
+})();
 </script></body></html>
