@@ -44,6 +44,12 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
 @keyframes float{to{transform:translate(35px,-27px)}}@keyframes up{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:380px){.card{padding:35px 18px}.actions{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Rainbow cursor trail: mouse/trackpad only */
+@media (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .rainbow-dot{position:fixed;left:0;top:0;width:15px;height:15px;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);background:hsl(var(--hue) 100% 65%);box-shadow:0 0 12px 3px hsl(var(--hue) 100% 65% / .65);animation:rainbow-fade .65s ease-out forwards}
+  @keyframes rainbow-fade{to{opacity:0;transform:translate(-50%,-50%) scale(.15)}}
+}
 </style></head>
 <body>
 <div class="orb" aria-hidden="true"></div><div class="orb two" aria-hidden="true"></div>
@@ -104,4 +110,22 @@ footer{margin-top:29px;color:#9290b3;font:400 11px 'Space Grotesk',sans-serif;le
  catch(e){hint.textContent='บันทึกไม่สำเร็จ พื้นที่จัดเก็บของเบราว์เซอร์อาจเต็ม'}
  });
 })();
+
+/* Tiny rainbow particles follow pointer movement, without blocking clicks. */
+if(window.matchMedia('(pointer:fine) and (prefers-reduced-motion:no-preference)').matches){
+  let last=0,hue=0;
+  document.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse' && event.pointerType!=='pen')return;
+    const now=performance.now();
+    if(now-last<25)return;
+    last=now;hue=(hue+13)%360;
+    const dot=document.createElement('span');
+    dot.className='rainbow-dot';
+    dot.style.left=event.clientX+'px';
+    dot.style.top=event.clientY+'px';
+    dot.style.setProperty('--hue',hue);
+    document.body.appendChild(dot);
+    dot.addEventListener('animationend',()=>dot.remove(),{once:true});
+  },{passive:true});
+}
 </script></body></html>
