@@ -39,3 +39,35 @@ const ids=['userName','userRole','userBio','userEmail','userPhone','userLocation
  }
  window.addEventListener('blur',()=>el.classList.remove('visible'));
 })();
+
+/* Anime profile photo editor: saved only in this browser */
+(function(){
+ const picker=document.getElementById('avatarPicker');
+ const input=document.getElementById('photoInput');
+ const image=document.getElementById('profilePhoto');
+ const notice=document.getElementById('editNotice');
+ if(!picker||!input||!image)return;
+ const key='anime-avatar-v1';
+ try{const saved=localStorage.getItem(key);if(saved&&saved.startsWith('data:image/'))image.src=saved}catch(e){}
+ picker.addEventListener('click',()=>input.click());
+ picker.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});
+ input.addEventListener('change',()=>{
+  const file=input.files[0];if(!file)return;
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){notice.textContent='กรุณาเลือกรูป JPG, PNG หรือ WebP';return}
+  if(file.size>12*1024*1024){notice.textContent='กรุณาเลือกรูปขนาดไม่เกิน 12 MB';return}
+  const reader=new FileReader();
+  reader.onerror=()=>{notice.textContent='ไม่สามารถอ่านไฟล์รูปได้'};
+  reader.onload=()=>{
+   const photo=new Image();
+   photo.onerror=()=>{notice.textContent='รูปภาพไม่ถูกต้อง'};
+   photo.onload=()=>{
+    const canvas=document.createElement('canvas');canvas.width=320;canvas.height=320;
+    const ctx=canvas.getContext('2d');const side=Math.min(photo.width,photo.height);
+    ctx.drawImage(photo,(photo.width-side)/2,(photo.height-side)/2,side,side,0,0,320,320);
+    const data=canvas.toDataURL('image/jpeg',.78);
+    try{localStorage.setItem(key,data);image.src=data;notice.textContent='✓ เปลี่ยนรูปสำเร็จ (บันทึกเฉพาะเบราว์เซอร์นี้)'}
+    catch(e){notice.textContent='บันทึกรูปไม่ได้: พื้นที่จัดเก็บเบราว์เซอร์อาจเต็ม'}
+   };photo.src=reader.result;
+  };reader.readAsDataURL(file);input.value='';
+ });
+})();
