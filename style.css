@@ -2,3 +2,46 @@
 /* Custom neon pointer */
 @media(hover:hover) and (pointer:fine){html.neon-ready,html.neon-ready body,html.neon-ready button,html.neon-ready a,html.neon-ready .avatar-container,html.neon-ready .editable{cursor:none!important}}
 .neon-cursor{position:fixed;top:0;left:0;width:44px;height:52px;pointer-events:none;z-index:2147483647;opacity:0;transform:translate3d(-100px,-100px,0);transition:opacity .15s;will-change:transform}.neon-cursor.visible{opacity:1}.neon-cursor svg{width:100%;height:100%;filter:drop-shadow(0 3px 3px #0008) drop-shadow(0 0 8px #f4a6ffa8);transform-origin:8px 7px;transition:transform .13s}.neon-cursor.pressed svg{transform:scale(.83)}.neon-cursor.interactive:not(.pressed) svg{transform:scale(1.15)}
+
+/* SHADOW ANIME / masculine black + purple redesign */
+:root{--ink:#f4efff;--muted:#b0a5cf;--pink:#a879ff;--violet:#8952ff;--blue:#a76bff;--dark:#090711}
+body{background:#090711;color:#f4efff}
+.sky{background:radial-gradient(ellipse at 76% 20%,#6b2de34b,transparent 43%),radial-gradient(ellipse at 10% 68%,#3d22805a,transparent 48%),linear-gradient(145deg,#06060b 0%,#110b22 55%,#080612 100%)}
+.sky:after{background-size:65px 70px;opacity:.25}
+.moon{background:radial-gradient(circle at 35% 30%,#e3d0ff,#a776ea 42%,#55308e 75%,#2a154c);box-shadow:0 0 60px #9c58ff9c,0 0 160px #672bca66}
+.cloud{background:#672cb92c}
+.stars{color:#ae7cff}
+.petals span{color:#9963ff94}
+.brand span,.nav-right a:hover{color:#b586ff}
+.online{background:#743dce22;border-color:#b88bff77;color:#d6b6ff}
+.online i{background:#b990ff;box-shadow:0 0 10px #ab6cff}
+.eyebrow{color:#ba93ff}.hero h2{text-shadow:0 8px 35px #7133cc9e}
+.hero h2 span{background:linear-gradient(100deg,#faf6ff,#b283ff,#7643ed);background-clip:text;-webkit-background-clip:text}
+.lead{color:#c6b9dd}
+.hero-chips span{background:#7f50d11a;border-color:#9765dd55;color:#d9c1ff}
+.explore,.btn-save{background:linear-gradient(115deg,#a86cff,#7139d6);color:#ffffff;box-shadow:0 10px 30px #7033d65c}
+.scene-ring{background:radial-gradient(circle,#803de85a,#1b123a20 67%,transparent 72%);border-color:#9f68ecaa;box-shadow:0 0 75px #7237d48c,inset 0 0 35px #792ac34f}
+.scene-ring:before,.scene-ring:after{color:#b991ff}
+.hair-back{background:linear-gradient(120deg,#0b0c1a,#292044 60%,#5c399c);border-radius:80px 80px 40px 40px}
+.face{background:linear-gradient(110deg,#edcbbf,#cb9c9f);box-shadow:inset -9px -5px #8c5c9261}
+.eye{background:#30203d;box-shadow:inset 3px 0 #7955ad}
+.bang{background:linear-gradient(125deg,#0c0d1a,#271d46 65%,#563387)}
+.bang.left{border-radius:15% 70% 45% 15%;transform:rotate(-20deg);height:100px}
+.bang.right{border-radius:70% 20% 20% 45%;transform:rotate(22deg);height:96px}
+.bow{font-size:0}.bow:after{content:"⚡";font-size:34px;color:#b28aff;text-shadow:0 0 15px #8c55ff}
+.body-art{background:linear-gradient(140deg,#181623 0 35%,#413067 36% 60%,#0b0c15 61%);border-color:#49316b}
+.float-heart,.float-spark{color:#9658fa}.scene-label{color:#b799ec}
+.profile-card{background:linear-gradient(145deg,#171122f5,#0e0b18f7);border-color:#8953d466;box-shadow:0 25px 90px #000b}
+.profile-side{background:#8c51ec10;border-color:#8b64be30}
+.avatar-container{border-color:#a67cff;box-shadow:0 0 0 7px #7246c536,0 0 40px #7a3fd67e}
+.camera{background:#090713c9}
+.level{background:#522a92;color:#eee0ff;border:1px solid #a57fff}
+.btn-edit{border-color:#9b69e877;color:#d9c5ff}
+.profile-role{color:#a77eff}
+.profile-bio{border-left-color:#8653e5;background:#8654ca0c;color:#d8ccea}
+.skill-row span{background:#703ecb27;border-color:#724bba77;color:#dac7ff}
+.info-icon{color:#a978ff}
+.info-item{background:#ffffff06;border-color:#ad77ef24}
+.edit-notice,.info-label{color:#a897c7}
+body.is-editing .editable{outline-color:#9d71e6;background:#7551c029}
+footer span{color:#b38aff}
